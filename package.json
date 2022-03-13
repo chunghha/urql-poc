@@ -1,14 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
+    "dev": "concurrently \"nuxi dev\" \"yarn codegen --watch\"",
     "build": "nuxi build",
     "start": "node .output/server/index.mjs",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.vue",
     "check:all": "yarn lint && yarn format",
     "codegen": "graphql-codegen",
-    "predev": "yarn codegen",
     "prebuild": "yarn codegen",
     "prestart": "yarn codegen"
   },
@@ -31,6 +30,7 @@
     "@typescript-eslint/parser": "^5.14.0",
     "@urql/exchange-graphcache": "^4.3.6",
     "@urql/vue": "^0.6.1",
+    "concurrently": "^7.0.0",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
