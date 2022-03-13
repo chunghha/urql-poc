@@ -1,7 +1,9 @@
 query allCountries($filter: CountryFilterInput) {
 	countries: countries(filter: $filter) {
 	    code
-	    name
+      currency
 	    emoji
+	    name
+      native
 	}
 }

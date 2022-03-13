@@ -4,7 +4,13 @@
     "dev": "nuxi dev",
     "build": "nuxi build",
     "start": "node .output/server/index.mjs",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.vue"
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.vue",
+    "check:all": "yarn lint && yarn format",
+    "codegen": "graphql-codegen",
+    "predev": "yarn codegen",
+    "prebuild": "yarn codegen",
+    "prestart": "yarn codegen"
   },
   "dependencies": {
     "graphql": "^16.3.0"
@@ -26,9 +32,14 @@
     "@urql/exchange-graphcache": "^4.3.6",
     "@urql/vue": "^0.6.1",
     "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-vue": "^8.5.0",
     "graphql-tag": "^2.12.6",
+    "import-sort-style-module": "^6.0.0",
     "nuxt3": "latest",
+    "prettier": "^2.5.1",
+    "prettier-plugin-import-sort": "^0.0.7",
     "typescript": "~4.6.2",
     "water.css": "^2.1.1"
   }

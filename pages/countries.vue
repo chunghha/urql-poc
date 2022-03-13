@@ -10,12 +10,16 @@
           <tr>
             <th style="width: 2em; white-space: nowrap">Flag</th>
             <th>Name</th>
+            <th style="width: 8em; white-space: nowrap">Currency</th>
+            <th>Native</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="c in data.countries" :key="c.code">
             <td>{{ c.emoji }}</td>
             <td>{{ c.name }}</td>
+            <td>{{ c.currency }}</td>
+            <td>{{ c.native }}</td>
           </tr>
         </tbody>
       </table>
