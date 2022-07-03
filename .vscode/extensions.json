@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "vue.volar",
-    "octref.vetur",
     "graphql.vscode-graphql",
     "capaj.graphql-codegen-vscode",
     "aaron-bond.better-comments",
