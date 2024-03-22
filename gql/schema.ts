@@ -1,19 +1,22 @@
-import type { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver, StorageAdapter as GraphCacheStorageAdapter } from '@urql/exchange-graphcache';
-import type { IntrospectionData } from '@urql/exchange-graphcache/dist/types/ast';
+import { cacheExchange } from '@urql/exchange-graphcache';
+import type { Resolver as GraphCacheResolver, UpdateResolver as GraphCacheUpdateResolver, OptimisticMutationResolver as GraphCacheOptimisticMutationResolver } from '@urql/exchange-graphcache';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** The `Upload` scalar type represents a file upload. */
-  Upload: never;
+  Upload: { input: never; output: never; }
 };
 
 export enum CacheControlScope {
@@ -23,9 +26,9 @@ export enum CacheControlScope {
 
 export type Continent = {
   __typename?: 'Continent';
-  code: Scalars['ID'];
+  code: Scalars['ID']['output'];
   countries: Array<Country>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
 };
 
 export type ContinentFilterInput = {
@@ -34,16 +37,16 @@ export type ContinentFilterInput = {
 
 export type Country = {
   __typename?: 'Country';
-  capital?: Maybe<Scalars['String']>;
-  code: Scalars['ID'];
+  capital?: Maybe<Scalars['String']['output']>;
+  code: Scalars['ID']['output'];
   continent: Continent;
-  currency?: Maybe<Scalars['String']>;
-  emoji: Scalars['String'];
-  emojiU: Scalars['String'];
+  currency?: Maybe<Scalars['String']['output']>;
+  emoji: Scalars['String']['output'];
+  emojiU: Scalars['String']['output'];
   languages: Array<Language>;
-  name: Scalars['String'];
-  native: Scalars['String'];
-  phone: Scalars['String'];
+  name: Scalars['String']['output'];
+  native: Scalars['String']['output'];
+  phone: Scalars['String']['output'];
   states: Array<State>;
 };
 
@@ -55,10 +58,10 @@ export type CountryFilterInput = {
 
 export type Language = {
   __typename?: 'Language';
-  code: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  native?: Maybe<Scalars['String']>;
-  rtl: Scalars['Boolean'];
+  code: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  native?: Maybe<Scalars['String']['output']>;
+  rtl: Scalars['Boolean']['output'];
 };
 
 export type LanguageFilterInput = {
@@ -77,7 +80,7 @@ export type Query = {
 
 
 export type QueryContinentArgs = {
-  code: Scalars['ID'];
+  code: Scalars['ID']['input'];
 };
 
 
@@ -92,12 +95,12 @@ export type QueryCountriesArgs = {
 
 
 export type QueryCountryArgs = {
-  code: Scalars['ID'];
+  code: Scalars['ID']['input'];
 };
 
 
 export type QueryLanguageArgs = {
-  code: Scalars['ID'];
+  code: Scalars['ID']['input'];
 };
 
 
@@ -107,18 +110,18 @@ export type QueryLanguagesArgs = {
 
 export type State = {
   __typename?: 'State';
-  code?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']['output']>;
   country: Country;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
 };
 
 export type StringQueryOperatorInput = {
-  eq?: InputMaybe<Scalars['String']>;
-  glob?: InputMaybe<Scalars['String']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  ne?: InputMaybe<Scalars['String']>;
-  nin?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  regex?: InputMaybe<Scalars['String']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  glob?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  ne?: InputMaybe<Scalars['String']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  regex?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
@@ -173,15 +176,50 @@ export type GraphCacheResolvers = {
 export type GraphCacheOptimisticUpdaters = {};
 
 export type GraphCacheUpdaters = {
+  Query?: {
+    continent?: GraphCacheUpdateResolver<{ continent: Maybe<WithTypename<Continent>> }, QueryContinentArgs>,
+    continents?: GraphCacheUpdateResolver<{ continents: Array<WithTypename<Continent>> }, QueryContinentsArgs>,
+    countries?: GraphCacheUpdateResolver<{ countries: Array<WithTypename<Country>> }, QueryCountriesArgs>,
+    country?: GraphCacheUpdateResolver<{ country: Maybe<WithTypename<Country>> }, QueryCountryArgs>,
+    language?: GraphCacheUpdateResolver<{ language: Maybe<WithTypename<Language>> }, QueryLanguageArgs>,
+    languages?: GraphCacheUpdateResolver<{ languages: Array<WithTypename<Language>> }, QueryLanguagesArgs>
+  },
   Mutation?: {},
   Subscription?: {},
+  Continent?: {
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<Continent>>, Record<string, never>>,
+    countries?: GraphCacheUpdateResolver<Maybe<WithTypename<Continent>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Continent>>, Record<string, never>>
+  },
+  Country?: {
+    capital?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    continent?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    emoji?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    emojiU?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    languages?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    native?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    phone?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>,
+    states?: GraphCacheUpdateResolver<Maybe<WithTypename<Country>>, Record<string, never>>
+  },
+  Language?: {
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<Language>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Language>>, Record<string, never>>,
+    native?: GraphCacheUpdateResolver<Maybe<WithTypename<Language>>, Record<string, never>>,
+    rtl?: GraphCacheUpdateResolver<Maybe<WithTypename<Language>>, Record<string, never>>
+  },
+  State?: {
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<State>>, Record<string, never>>,
+    country?: GraphCacheUpdateResolver<Maybe<WithTypename<State>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<State>>, Record<string, never>>
+  },
 };
 
-export type GraphCacheConfig = {
-  schema?: IntrospectionData,
+export type GraphCacheConfig = Parameters<typeof cacheExchange>[0] & {
   updates?: GraphCacheUpdaters,
   keys?: GraphCacheKeysConfig,
   optimistic?: GraphCacheOptimisticUpdaters,
   resolvers?: GraphCacheResolvers,
-  storage?: GraphCacheStorageAdapter
 };
